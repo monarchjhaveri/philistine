@@ -9,6 +9,9 @@ class App extends React.Component {
         <phil.partial>
           { ({message}) => message }
         </phil.partial>
+        <button onClick={() => phil.update({message: { $set: 'Hello World!' }})}>
+          Click me
+        </button>
       </div>
     )
   }
