@@ -4,19 +4,6 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 
-class PhilistineApp extends React.Component {
-  render() {
-    return (
-      <div>
-        <Provider value={this.props.state}>
-          {this.props.children}
-        </Provider>
-      </div>
-    )
-  }
-}
-
-// from https://medium.freecodecamp.org/replacing-redux-with-the-new-react-context-api-8f5d01a00e8c
 export default class Philistine {
   constructor(initialState) {
     this.state =  initialState;
@@ -47,7 +34,7 @@ export default class Philistine {
 
   update(updateObj) {
     // uses immutability-helpers
-    // TODO: use something easier than immutability-helpers
+    // TODO: use something less cumbersome than immutability-helpers
     this.state = update(this.state, updateObj);
     this.render();
   }
