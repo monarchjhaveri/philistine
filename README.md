@@ -75,3 +75,7 @@ const initialState = {message: 'Not working yet!'};
 const phil = new Philistine(initialState);
 phil.render(<App />, document.getElementById('out'));
 ```
+
+### Development
+
+Make sure you run `npm run install-peers` to install various peerDependencies that Philistine needs during development.
