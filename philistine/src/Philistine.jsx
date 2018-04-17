@@ -7,12 +7,13 @@ import { Redirect, Route, BrowserRouter, Link } from 'react-router-dom';
 import produce from 'immer';
 
 class PhilistineRouteConfig {
-  constructor(path, {name, component, options, showIf}) {
+  constructor(path, {name, component, options, showIf, pathParamMapping}) {
     this.path = path;
     this.component = component;
     this.name = name;
     this.options = options;
     this.showIf = showIf;
+    this.pathParamMapping = pathParamMapping;
   }
 }
 
