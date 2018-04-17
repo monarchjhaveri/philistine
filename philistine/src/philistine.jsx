@@ -1,10 +1,10 @@
 import merge from 'deepmerge';
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import DOM from 'react-dom';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 
-export default class Philistine {
+class Philistine {
   constructor(initialState) {
     this.state =  initialState;
     this.Context = React.createContext(initialState);
@@ -17,7 +17,8 @@ export default class Philistine {
 
     const Provider = this.Context.Provider;
 
-    ReactDOM.render(
+    debugger;
+    DOM.render(
       <Provider value={this.state}>
         {this.reactComponent}
       </Provider>
@@ -41,3 +42,4 @@ export default class Philistine {
 }
 
 
+module.exports = Philistine;

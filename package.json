@@ -1,7 +1,7 @@
 {
   "name": "philistine",
-  "version": "0.0.1",
-  "main": "src/philistine.js",
+  "version": "0.0.2",
+  "main": "philistine/dist/philistine.js",
   "repository": "git@github.com:monarchjhaveri/jujutsu.js.git",
   "author": "Monarch Wadia <monarchwadia@gmail.com>",
   "license": "MIT",
@@ -31,7 +31,6 @@
   },
   "scripts": {
     "start": "webpack-dev-server --config ./philistine/webpack.config.js",
-    "build": "webpack            --config ./philistine/webpack.config.js",
-    "install-peers": "npm-install-peers"
+    "build": "webpack            --config ./philistine/webpack.config.js"
   }
 }
