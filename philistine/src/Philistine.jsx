@@ -9,7 +9,7 @@ function createRouter(routes) {
   return Object.keys(routes).map(route => {
     const component = routes[route];
     return (
-      <Route path={route} component={component} id={route.toString()} />
+      <Route path={route} component={component} key={route.toString()} />
     )
   });
 }
