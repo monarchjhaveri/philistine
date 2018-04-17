@@ -14,6 +14,14 @@ Philistine is an ideal. It isn't ready yet. Don't use it in production projects 
 
 ## Usage
 
+### Installation
+
+```
+  npm install philistine
+```
+
+Note: `philistine` has peer depends on `react`, `react-dom` and `prop-types`. You will have to have these libraries installed on your project in order for `philistine` to function as expected.
+
 ### Construction
 
 ```
