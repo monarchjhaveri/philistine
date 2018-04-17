@@ -4,6 +4,7 @@ import DOM from 'react-dom';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import { Route, BrowserRouter, Link } from 'react-router-dom';
+import produce from 'immer';
 
 class PhilistineRoute {
   constructor(path, {name, component, options}) {
@@ -34,7 +35,8 @@ export default class Philistine {
       options: {
         routes, template
       },
-      state: initialState
+      state: initialState,
+      eventHandlers: {} // key is string, value is array of eventHandler
     }
 
     this.state = state;
@@ -49,6 +51,25 @@ export default class Philistine {
         }
       </this.partial>
     );
+  }
+
+  handle(eventName, reducer) {
+    this.state.eventHandlers[eventName] = this.state.eventHandlers[eventName] || [];
+    this.state.eventHandlers[eventName].push(reducer);
+  }
+
+  dispatch(eventName, payload) {
+    const eventHandlers = this.state.eventHandlers[eventName];
+    if (!eventHandlers) throw new Error(`Unknown event ${eventName}`);
+
+    let newState = this.state.state;
+    eventHandlers.forEach(reducer => {
+      newState = produce(newState, draftState => {
+        reducer(draftState, payload);
+      });
+    });
+
+    this.update(newState);
   }
 
   render(domElement) {
@@ -70,10 +91,8 @@ export default class Philistine {
     , this.domElement);
   }
 
-  update(updateObj) {
-    // uses immutability-helpers
-    // TODO: use something less cumbersome than immutability-helpers
-    this.state = update(this.state, updateObj);
+  update(newState) {
+    this.state.state = newState;
     this.render();
   }
 }
