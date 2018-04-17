@@ -3,26 +3,52 @@ import React, { Component } from 'react';
 import DOM from 'react-dom';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
-import { Route, BrowserRouter } from 'react-router-dom';
+import { Route, BrowserRouter, Link } from 'react-router-dom';
+
+class PhilistineRoute {
+  constructor(path, {name, component, options}) {
+    this.path = path;
+    this.component = component;
+    this.name = name;
+    this.options = options;
+  }
+}
 
 function createRouter(routes) {
-  return Object.keys(routes).map(route => {
-    const component = routes[route];
+  return routes.map(route => {
+    const component = route.component;
+    const path = route.path;
+
     return (
-      <Route path={route} component={component} key={route.toString()} />
+      <Route path={path} component={component} key={path.toString()} {...route.options}/>
     )
   });
 }
 
 export default class Philistine {
   constructor(initialState, options) {
-    // decompose and store options
-    this.options = options;
-    this.state =  initialState;
+    const routes = Object.keys(options.routes).map(path => new PhilistineRoute(path, options.routes[path]))
+    const template = options.template;
+
+    const state = {
+      options: {
+        routes, template
+      },
+      state: initialState
+    }
+
+    this.state = state;
 
     // create context
-    this.Context = React.createContext(initialState);
+    this.Context = React.createContext(state);
     this.partial = this.Context.Consumer;
+    this.routes = ({children}) => (
+      <this.partial>
+        {
+          ({options}) => children(options.routes)
+        }
+      </this.partial>
+    );
   }
 
   render(domElement) {
@@ -30,8 +56,8 @@ export default class Philistine {
 
     const Provider = this.Context.Provider;
 
-    const routes = createRouter(this.options.routes);
-    const Template = this.options.template;
+    const routes = createRouter(this.state.options.routes);
+    const Template = this.state.options.template;
 
     DOM.render(
       <Provider value={this.state}>
@@ -44,14 +70,6 @@ export default class Philistine {
     , this.domElement);
   }
 
-  partial(initialState, callback) {
-    return (
-      <this.Context.Consumer>
-        { callback }
-      </this.Context.Consumer>
-    )
-  }
-
   update(updateObj) {
     // uses immutability-helpers
     // TODO: use something less cumbersome than immutability-helpers
@@ -59,3 +77,5 @@ export default class Philistine {
     this.render();
   }
 }
+
+Philistine.prototype.link = Link;
