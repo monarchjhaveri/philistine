@@ -3,15 +3,16 @@ import React, { Component } from 'react';
 import DOM from 'react-dom';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
-import { Route, BrowserRouter, Link } from 'react-router-dom';
+import { Redirect, Route, BrowserRouter, Link } from 'react-router-dom';
 import produce from 'immer';
 
-class PhilistineRoute {
-  constructor(path, {name, component, options}) {
+class PhilistineRouteConfig {
+  constructor(path, {name, component, options, showIf}) {
     this.path = path;
     this.component = component;
     this.name = name;
     this.options = options;
+    this.showIf = showIf;
   }
 }
 
@@ -28,7 +29,7 @@ function createRouter(routes) {
 
 export default class Philistine {
   constructor(initialState, options) {
-    const routes = Object.keys(options.routes).map(path => new PhilistineRoute(path, options.routes[path]))
+    const routes = Object.keys(options.routes).map(path => new PhilistineRouteConfig(path, options.routes[path]))
     const template = options.template;
 
     const state = {
@@ -43,13 +44,13 @@ export default class Philistine {
 
     // create context
     this.Context = React.createContext(state);
-    this.partial = this.Context.Consumer;
+    this.consumer = this.Context.Consumer;
     this.routes = ({children}) => (
-      <this.partial>
+      <this.consumer>
         {
           ({options}) => children(options.routes)
         }
-      </this.partial>
+      </this.consumer>
     );
   }
 
@@ -59,17 +60,21 @@ export default class Philistine {
   }
 
   dispatch(eventName, payload) {
-    const eventHandlers = this.state.eventHandlers[eventName];
-    if (!eventHandlers) throw new Error(`Unknown event ${eventName}`);
+    const actions = () => {
+      const eventHandlers = this.state.eventHandlers[eventName];
+      if (!eventHandlers) throw new Error(`Unknown event ${eventName}`);
 
-    let newState = this.state.state;
-    eventHandlers.forEach(reducer => {
-      newState = produce(newState, draftState => {
-        reducer(draftState, payload);
+      let newState = this.state.state;
+      eventHandlers.forEach(reducer => {
+        newState = produce(newState, draftState => {
+          reducer(draftState, payload);
+        });
       });
-    });
 
-    this.update(newState);
+      this.update(newState);
+    }
+
+    setTimeout(actions, 0);
   }
 
   render(domElement) {
@@ -98,3 +103,4 @@ export default class Philistine {
 }
 
 Philistine.prototype.link = Link;
+Philistine.prototype.redirect = Redirect;
