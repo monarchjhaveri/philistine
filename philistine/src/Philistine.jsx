@@ -3,24 +3,42 @@ import React, { Component } from 'react';
 import DOM from 'react-dom';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
+import { Route, BrowserRouter } from 'react-router-dom';
 
-class Philistine {
-  constructor(initialState) {
+function createRouter(routes) {
+  return Object.keys(routes).map(route => {
+    const component = routes[route];
+    return (
+      <Route path={route} component={component} id={route.toString()} />
+    )
+  });
+}
+
+export default class Philistine {
+  constructor(initialState, options) {
+    // decompose and store options
+    this.options = options;
     this.state =  initialState;
+
+    // create context
     this.Context = React.createContext(initialState);
     this.partial = this.Context.Consumer;
   }
 
-  render(reactComponent, domElement) {
-    this.reactComponent = this.reactComponent || reactComponent;
+  render(domElement) {
     this.domElement = this.domElement || domElement;
 
     const Provider = this.Context.Provider;
 
-    debugger;
+    const routes = createRouter(this.options.routes);
+
     DOM.render(
       <Provider value={this.state}>
-        {this.reactComponent}
+        <BrowserRouter>
+          <div>
+            { routes }
+          </div>
+        </BrowserRouter>
       </Provider>
     , this.domElement);
   }
@@ -40,6 +58,3 @@ class Philistine {
     this.render();
   }
 }
-
-
-module.exports = Philistine;

@@ -8,7 +8,9 @@
   "dependencies": {
     "commander": "^2.15.1",
     "deepmerge": "^2.1.0",
-    "immutability-helper": "^2.6.6"
+    "immutability-helper": "^2.6.6",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2"
   },
   "peerDependencies": {
     "prop-types": "^15.6.1",

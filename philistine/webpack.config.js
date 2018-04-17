@@ -12,7 +12,7 @@ function external(name, windowObject) {
 
 module.exports = {
   mode: "development",
-  entry: path.resolve(__dirname, "src/philistine.jsx"),
+  entry: path.resolve(__dirname, "src/Philistine.jsx"),
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "philistine.js",

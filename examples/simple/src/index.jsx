@@ -1,4 +1,4 @@
-import Philistine, {partial} from '../../../philistine/src/philistine.jsx';
+import Philistine, {partial} from '../../../philistine/src/Philistine.jsx';
 import React from 'react';
 import ReactDom from 'react-dom';
 
