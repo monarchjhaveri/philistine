@@ -31,13 +31,14 @@ export default class Philistine {
     const Provider = this.Context.Provider;
 
     const routes = createRouter(this.options.routes);
+    const Template = this.options.template;
 
     DOM.render(
       <Provider value={this.state}>
         <BrowserRouter>
-          <div>
+          <Template>
             { routes }
-          </div>
+          </Template>
         </BrowserRouter>
       </Provider>
     , this.domElement);
