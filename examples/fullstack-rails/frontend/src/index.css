@@ -1,0 +1,35 @@
+.auth-form input {
+  display: inline;
+  width: 100%;
+}
+
+.error-message, .success-message {
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.error-message {
+  color: red;
+  border: 1px solid red;
+  background-color: pink;
+}
+
+.success-message {
+  color: green;
+  border: 1px solid green;
+  background-color: lightgreen;
+}
+
+.error-message .close-button, .success-message .close-button {
+  float: right;
+  cursor: pointer;
+}
+
+.meal-card {
+  padding: 10px 5px;
+  display: inline-block;
+  margin: 10px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  cursor: pointer;
+}
