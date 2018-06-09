@@ -36,7 +36,7 @@ export default class Philistine {
       : [];
     const template = options && options.template || DefaultTemplate;
 
-    const state = {
+    this.definition = {
       options: {
         routes, template
       },
@@ -44,10 +44,8 @@ export default class Philistine {
       eventHandlers: {} // key is string, value is array of eventHandler
     }
 
-    this.state = state;
-
     // create context
-    this.Context = React.createContext(state);
+    this.Context = React.createContext(this.definition.state);
     this.consumer = this.Context.Consumer;
     this.routes = ({children}) => (
       <this.consumer>
@@ -59,16 +57,16 @@ export default class Philistine {
   }
 
   handle(eventName, reducer) {
-    this.state.eventHandlers[eventName] = this.state.eventHandlers[eventName] || [];
-    this.state.eventHandlers[eventName].push(reducer);
+    this.definition.eventHandlers[eventName] = this.definition.eventHandlers[eventName] || [];
+    this.definition.eventHandlers[eventName].push(reducer);
   }
 
   dispatch(eventName, payload) {
     const actions = () => {
-      const eventHandlers = this.state.eventHandlers[eventName];
+      const eventHandlers = this.definition.eventHandlers[eventName];
       if (!eventHandlers) throw new Error(`Unknown event ${eventName}`);
 
-      let newState = this.state.state;
+      let newState = this.definition.state;
       eventHandlers.forEach(reducer => {
         newState = produce(newState, draftState => {
           reducer(draftState, payload);
@@ -86,13 +84,13 @@ export default class Philistine {
 
     const Provider = this.Context.Provider;
 
-    let routes = createRouter(this.state.options.routes);
+    let routes = createRouter(this.definition.options.routes);
     if (routes.length === 0) routes = '';
 
-    const Template = this.state.options.template;
+    const Template = this.definition.options.template;
 
     DOM.render(
-      <Provider value={this.state}>
+      <Provider value={this.definition.state}>
         <BrowserRouter>
           <Template>
             { routes }
@@ -103,7 +101,7 @@ export default class Philistine {
   }
 
   update(newState) {
-    this.state.state = newState;
+    this.definition.state = newState;
     this.render();
   }
 }
