@@ -34,6 +34,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server --config ./philistine/webpack.config.js",
-    "build": "webpack            --config ./philistine/webpack.config.js"
+    "build": "webpack            --config ./philistine/webpack.config.js",
+    "install-peers": "npm-install-peers"
   }
 }

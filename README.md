@@ -32,18 +32,18 @@ phil.render(<YourRootComponent />, document.getElementById('your-main-div'));
 
 ### Accessing state
 
-`phil.partial` contains an React component that takes a single callback as a child. That callback receives the entire state of the application.
+`phil.consumer` contains an React component that takes a single callback as a child. That callback receives the entire state of the application.
 
 
-You can use `phil.partial` at any depth in the application without passing props down in chains.
+You can use `phil.consumer` at any depth in the application without passing props down in chains.
 
 ```
-  <phil.partial>
+  <phil.consumer>
     { ({message}) => message }
-  </phil.partial>
+  </phil.consumer>
 ```
 
-Philistine uses React's `Context` API. The `partial` construct located at `new Philistine({}).partial` is nothing but a `Context.Consumer`. Please see [React's Context API](https://reactjs.org/docs/context.html) for more info.
+Philistine uses React's `Context` API. The `consumer` construct located at `new Philistine({}).consumer` is nothing but a `Context.Consumer`. Please see [React's Context API](https://reactjs.org/docs/context.html) for more info.
 
 ### Updating State
 
@@ -60,18 +60,28 @@ phil.update({message: { $set: 'Hello World!' }});
 ### Sample code
 
 ```
-import Philistine, {partial} from 'philistine';
 import React from 'react';
-import ReactDom from 'react-dom';
+import Philistine from 'philistine';
 
+// Our app
 class App extends React.Component {
+  getMessage(phil) {
+    // retrieve the current message from global state
+    return <div>{ phil.state.message }</div>;
+  }
+
+  updateMessage() {
+    // when the button is clicked, update the message
+    phil.dispatch('UPDATE_MESSAGE', 'Hello World!');
+  }
+
   render() {
     return (
       <div>
-        <phil.partial>
-          { ({message}) => message }
-        </phil.partial>
-        <button onClick={() => phil.update({message: { $set: 'Hello World!' }})}>
+        <phil.consumer>
+          {this.getMessage}
+        </phil.consumer>
+        <button onClick={this.updateMessage}>
           Click me
         </button>
       </div>
@@ -79,11 +89,24 @@ class App extends React.Component {
   }
 }
 
-const initialState = {message: 'Not working yet!'};
-const phil = new Philistine(initialState);
-phil.render(<App />, document.getElementById('out'));
+// set the initial state and the options, then create the Philistine instance
+const initialState = {message: 'Click the button below to get a special message'};
+const options = { template: App }
+const phil = new Philistine(initialState, options);
+
+// Add the handler for the button
+phil.handle('UPDATE_MESSAGE', (draftState, newMessage) => {
+  draftState.message = newMessage;
+  return draftState;
+});
+
+// render the app
+phil.render(document.getElementById('root'));
 ```
 
 ### Development
+1. `yarn link`
+2. `yarn install-peers`
+3. `yarn start`
 
-Make sure you run `npm run install-peers` to install various peerDependencies that Philistine needs during development.
+Now you can run `yarn link philistine` in your local project to use Philistine in it.

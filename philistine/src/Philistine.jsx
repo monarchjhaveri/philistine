@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import { Redirect, Route, BrowserRouter, Link } from 'react-router-dom';
 import produce from 'immer';
+import DefaultTemplate from './DefaultTemplate.jsx';
 
 class PhilistineRouteConfig {
   constructor(path, {name, component, options, showIf, pathParamMapping}) {
@@ -29,9 +30,11 @@ function createRouter(routes) {
 }
 
 export default class Philistine {
-  constructor(initialState, options) {
-    const routes = Object.keys(options.routes).map(path => new PhilistineRouteConfig(path, options.routes[path]))
-    const template = options.template;
+  constructor(initialState={}, options={}) {
+    const routes = options && options.routes 
+      ? Object.keys(options.routes).map(path => new PhilistineRouteConfig(path, options.routes[path]))
+      : [];
+    const template = options && options.template || DefaultTemplate;
 
     const state = {
       options: {
@@ -83,7 +86,9 @@ export default class Philistine {
 
     const Provider = this.Context.Provider;
 
-    const routes = createRouter(this.state.options.routes);
+    let routes = createRouter(this.state.options.routes);
+    if (routes.length === 0) routes = '';
+
     const Template = this.state.options.template;
 
     DOM.render(
